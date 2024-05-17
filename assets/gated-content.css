@@ -1,0 +1,46 @@
+.gated-content[locked='true'] .gated-content__lockable {
+  display: none;
+}
+
+.gated-content[locked='false'] .gated-content-form {
+  display: none;
+}
+
+.gated-content-form__button {
+  aspect-ratio: 1 / 1;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: auto;
+  inset: auto;
+  margin: 0;
+  position: relative;
+  width: 4.7rem;
+  z-index: 2;
+}
+
+.gated-content-form__button:focus-visible {
+  box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.4rem rgba(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+}
+
+.gated-content-form__button:focus {
+  box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.4rem rgba(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+}
+
+.gated-content-form__button:not(:focus-visible):not(.focused) {
+  box-shadow: inherit;
+  background-color: inherit;
+}
+
+.gated-content-form__button .icon {
+  width: 1.5rem;
+}
+
+.gated-content-form__message {
+  margin-bottom: 0;
+}
+
+.gated-content-form__message[hidden] {
+  display: none;
+}

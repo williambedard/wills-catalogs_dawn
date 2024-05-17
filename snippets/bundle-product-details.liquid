@@ -1,0 +1,31 @@
+<div class="bundled-product gated-content__lockable">
+  <h3 class="bundled-product__title" onclick="toggleBundledProductDetails(this)">
+    <span class="bundled-product__title-text">{{ bundled_product.title }}</span>
+    <span class="arrow">&#x25BC;</span>
+  </h3>
+  <div class="bundled-product__details" style="display: none;">
+    <a href="{{ bundled_product.url }}" class="bundled-product__link">Go to product</a>
+    <img
+      id="{{ bundled_product.id }}-bundled-product-main-image"
+      class="bundled-product__image"
+      src="{{ bundled_product.images.first | image_url: width: 800, height: 800 }}"
+      loading="eager"
+      height="800"
+      width="800"
+    >
+    <div class="bundled-product__thumbnails">
+      {%- assign thumnail_images = bundled_product.images | slice: 0, 5 -%}
+      {%- for image in thumnail_images -%}
+        <img
+          class="bundled-product__thumbnail"
+          src="{{ image | image_url: width: 800, height: 800 }}"
+          loading="eager"
+          height="100"
+          width="100"
+          onclick="updateMainImage(this.src, '{{ bundled_product.id }}-bundled-product-main-image')"
+        >
+      {%- endfor -%}
+    </div>
+    <p class="bundled-product__description">{{ bundled_product.description }}</p>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
+  - grouped_products: {Array} array of pseudo-variant products
+  - grouping_strategy: {String} the type of grouping strategy to use. This will determine which option label to render for grouped products.
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{%- if grouped_products.size > 1 -%}
+  <div class="js product-form__input gated-content__lockable">
+    <p class="form__label">
+      {{ product_group_option | capitalize }}
+    </p>
+
+    {%- for grouped_product in grouped_products -%}
+      {%- assign is_active = false -%}
+      {%- if grouped_product == product -%}
+        {%- assign is_active = true -%}
+      {%- endif -%}
+
+      {%- assign tag_option_value = grouped_product.metafields.options[product_group_option].value -%}
+      {%- assign option_value = grouped_product.metafields.grouped_product.label.value -%}
+      {%- assign metafield_option_value = grouped_product.metafields.grouped_product.option.value -%}
+
+
+      {%- assign display_value = grouped_product.title -%}
+      {%- if grouping_strategy == 'tag' and tag_option_value != blank -%}
+        {%- assign display_value = tag_option_value -%}
+      {%- elsif grouping_strategy == 'collection' and option_value != blank -%}
+        {%- assign display_value = option_value -%}
+      {%- elsif grouping_strategy == 'metafield' and metafield_option_value != blank -%}
+        {%- assign display_value = metafield_option_value -%}
+      {%- endif -%}
+
+      <a
+        class="product-form__input-link"
+        aria-current="{{ is_active }}"
+        href="{{ grouped_product.url }}"
+      >
+        {{ display_value }}
+      </a>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{%- unless product.has_only_default_variant -%}
+  <variant-selects
+    id="variant-selects-{{ section.id }}"
+    class="no-js-hidden gated-content__lockable"
+    data-section="{{ section.id }}"
+    data-url="{{ product.url }}"
+    data-product-id="{{ product.id }}"
+    {% if update_url == false %}
+      data-update-url="false"
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {%- for option in product.options_with_values -%}
+      {%- assign picker_type = block.settings.picker_type -%}
+      {%- if picker_type == 'button' -%}
+        <fieldset class="js product-form__input product-form__input--pill">
+          <legend class="form__label">{{ option.name }}</legend>
+          {% render 'product-variant-options',
+            product: product,
+            option: option,
+            block: block,
+            picker_type: picker_type
+          %}
+        </fieldset>
+      {%- else -%}
+        <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
+              {% render 'product-variant-options',
+                product: product,
+                option: option,
+                block: block,
+                picker_type: picker_type
+              %}
+            </select>
+            {% render 'icon-caret' %}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </variant-selects>
+{%- endunless -%}
+
+<noscript class="product-form__noscript-wrapper-{{ section.id }}">
+  <div class="product-form__input gated-content__lockable{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>

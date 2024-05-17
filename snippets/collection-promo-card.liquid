@@ -1,0 +1,24 @@
+<article class="collection-promo-card">
+  <div class="collection-promo-card__background">
+    {%- assign media_type = promo_card.image_video.value.media_type -%}
+    {%- if media_type == 'image' -%}
+      {{ promo_card.image_video.value | image_url: width: 1066 | image_tag: class: 'collection-promo-card__media collection-promo-card__media--image' }}
+    {%- elsif media_type == 'video' -%}
+      {{ promo_card.image_video.value | video_tag: autoplay: true, loop: true, class: 'collection-promo-card__media collection-promo-card__media--video' }}
+    {%- endif -%}
+  </div>
+
+  <div class="collection-promo-card__inner">
+    {%- if promo_card.text != blank -%}
+      <p class="collection-promo-card__text">
+        {{ promo_card.text }}
+      </p>
+    {%- endif -%}
+
+    {%- if promo_card.link != blank and promo_card.link_text != blank -%}
+      <a class="collection-promo-card__link button button--primary" href="{{ promo_card.link }}">
+        {{ promo_card.link_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</article>

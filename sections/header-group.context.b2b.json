@@ -1,0 +1,15 @@
+{
+  "parent": "header-group.json",
+  "context": {
+    "b2b": true
+  },
+  "sections": {
+    "header": {
+      "settings": {
+        "menu": "b2b-main-menu"
+      },
+      "blocks": {
+      }
+    }
+  }
+}

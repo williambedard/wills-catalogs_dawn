@@ -1,0 +1,108 @@
+{% comment %}
+  Renders bundle product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional)
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{{ 'bundle-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bundle-product.js' | asset_url }}" defer="defer"></script>
+
+{% assign bundled_products = product.metafields.bundles.products.value %}
+{% comment %}
+  'rendered_products_string' is used to track rendered bundled products.
+  Each product's title is appended to this string after rendering.
+  Before rendering, we check if the product's title is already in the string to avoid duplicates.
+{% endcomment %}
+{% capture rendered_products_string %}{% endcapture %}
+
+{%- unless product.has_only_default_variant -%}
+  {%- if block.settings.picker_type == 'button' -%}
+    <variant-radios
+      id="variant-radios-{{ section.id }}"
+      class="no-js-hidden gated-content__lockable"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      {% if update_url == false %}
+        data-update-url="false"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {%- for option in product.options_with_values -%}
+        {%- for bundled_product in bundled_products -%}
+          {%- if option.name contains bundled_product.title -%}
+            {%- assign rendered_products = rendered_products_string | split: ',' -%}
+            {%- unless rendered_products contains bundled_product.title -%}
+              {% render 'bundle-product-details', bundled_product: bundled_product %}
+              {% capture rendered_products_string %}{{ rendered_products_string }},{{ bundled_product.title }}{% endcapture %}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <fieldset class="js product-form__input">
+          <legend class="form__label">{{ option.name }}</legend>
+          {% render 'product-variant-options', product: product, option: option, block: block %}
+        </fieldset>
+      {%- endfor -%}
+      <script type="application/json">
+        {{ product.variants | json }}
+      </script>
+    </variant-radios>
+  {%- else -%}
+    <variant-selects
+      id="variant-selects-{{ section.id }}"
+      class="no-js-hidden gated-content__lockable"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      {% if update_url == false %}
+        data-update-url="false"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {%- for option in product.options_with_values -%}
+        {%- for bundled_product in bundled_products -%}
+          {%- if option.name contains bundled_product.title -%}
+            {%- assign rendered_products = rendered_products_string | split: ',' -%}
+            {%- unless rendered_products contains bundled_product.title -%}
+              {% render 'bundle-product-details', bundled_product: bundled_product %}
+              {% capture rendered_products_string %}{{ rendered_products_string }},{{ bundled_product.title }}{% endcapture %}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
+              {% render 'product-variant-options', product: product, option: option, block: block %}
+            </select>
+            {% render 'icon-caret' %}
+          </div>
+        </div>
+      {%- endfor -%}
+      <script type="application/json">
+        {{ product.variants | json }}
+      </script>
+    </variant-selects>
+  {%- endif -%}
+  {% comment %}
+    render any remaining bundled prodcut details
+  {% endcomment %}
+  {%- for bundled_product in bundled_products -%}
+    {%- assign rendered_products = rendered_products_string | split: ',' -%}
+    {%- unless rendered_products contains bundled_product.title -%}
+      {% render 'bundle-product-details', bundled_product: bundled_product %}
+      {% capture rendered_products_string %}{{ rendered_products_string }},{{ bundled_product.title }}{% endcapture %}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endunless -%}

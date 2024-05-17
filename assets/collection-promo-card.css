@@ -1,0 +1,48 @@
+.collection-promo-card {
+  display: grid;
+  height: 100%;
+  position: relative;
+  min-height: 269px; /* height of product card images */
+}
+
+.collection-promo-card__background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.collection-promo-card__media {
+  max-width: 100%;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  transition: transform var(--duration-long) ease;
+}
+
+.collection-promo-card:hover .collection-promo-card__media--image {
+  transform: scale(1.03);
+}
+
+.collection-promo-card__inner {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  z-index: 1;
+  text-align: center;
+}
+
+.collection-promo-card__link {
+  position: static;
+}
+
+.collection-promo-card__link::before {
+  box-shadow: none !important;
+}
+
+.collection-promo-card__link::after {
+  box-shadow: none !important;
+  content: '';
+  position: absolute;
+  inset: 0;
+}
