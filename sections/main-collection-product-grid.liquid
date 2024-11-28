@@ -159,6 +159,9 @@
             >
               {%- assign index = 0 -%}
               {%- for product in collection.products -%}
+                {%- comment %}<locksmith:6e7f>{% endcomment -%}
+                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: product, subject_parent: collection, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                {%- comment %}</locksmith:6e7f>{% endcomment -%}
                 {%- liquid
                   assign index = index | plus: 1
 

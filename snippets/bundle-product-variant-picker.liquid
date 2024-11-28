@@ -35,6 +35,9 @@
     >
       {%- for option in product.options_with_values -%}
         {%- for bundled_product in bundled_products -%}
+          {%- comment %}<locksmith:7c01>{% endcomment -%}
+            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: bundled_product, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+          {%- comment %}</locksmith:7c01>{% endcomment -%}
           {%- if option.name contains bundled_product.title -%}
             {%- assign rendered_products = rendered_products_string | split: ',' -%}
             {%- unless rendered_products contains bundled_product.title -%}
@@ -65,6 +68,9 @@
     >
       {%- for option in product.options_with_values -%}
         {%- for bundled_product in bundled_products -%}
+          {%- comment %}<locksmith:52fb>{% endcomment -%}
+            {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: bundled_product, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+          {%- comment %}</locksmith:52fb>{% endcomment -%}
           {%- if option.name contains bundled_product.title -%}
             {%- assign rendered_products = rendered_products_string | split: ',' -%}
             {%- unless rendered_products contains bundled_product.title -%}
@@ -99,6 +105,9 @@
     render any remaining bundled prodcut details
   {% endcomment %}
   {%- for bundled_product in bundled_products -%}
+    {%- comment %}<locksmith:a46b>{% endcomment -%}
+      {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: bundled_product, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+    {%- comment %}</locksmith:a46b>{% endcomment -%}
     {%- assign rendered_products = rendered_products_string | split: ',' -%}
     {%- unless rendered_products contains bundled_product.title -%}
       {% render 'bundle-product-details', bundled_product: bundled_product %}

@@ -24,16 +24,22 @@
       {{ section.settings.heading }}
     </h2>
     <div class="collage{% if section.settings.mobile_layout == 'collage' %} collage--mobile{% endif %}">
+      {%- comment %}<locksmith:5acf>{% endcomment -%}
+        {%- assign locksmith_f3c8_forloop__size = 0 %}{%- for block in section.blocks -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.collection, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_f3c8_forloop__size = locksmith_f3c8_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_f3c8_forloop__index = nil -%}
+      {%- comment %}</locksmith:5acf>{% endcomment -%}
       {%- for block in section.blocks -%}
+        {%- comment %}<locksmith:f8f0>{% endcomment -%}
+          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.collection, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_f3c8_forloop__index == nil %}{% assign locksmith_f3c8_forloop__index = 1 %}{% assign locksmith_f3c8_forloop__index0 = 0 %}{% else %}{% assign locksmith_f3c8_forloop__index = locksmith_f3c8_forloop__index | plus: 1 %}{% assign locksmith_f3c8_forloop__index0 = locksmith_f3c8_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_f3c8_forloop__index == 1 %}{% assign locksmith_f3c8_forloop__first = true %}{% else %}{% assign locksmith_f3c8_forloop__first = false %}{% endif %}{% if locksmith_f3c8_forloop__index == locksmith_f3c8_forloop__size %}{% assign locksmith_f3c8_forloop__last = true %}{% else %}{% assign locksmith_f3c8_forloop__last = false %}{% endif %}{% assign locksmith_f3c8_forloop__rindex = locksmith_f3c8_forloop__size | minus: locksmith_f3c8_forloop__index | minus: 1 %}{% assign locksmith_f3c8_forloop__rindex0 = locksmith_f3c8_forloop__size | minus: locksmith_f3c8_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+        {%- comment %}</locksmith:f8f0>{% endcomment -%}
         <div
           class="collage__item collage__item--{{ block.type }} collage__item--{{ section.settings.desktop_layout }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           {{ block.shopify_attributes }}
           {% if settings.animations_reveal_on_scroll %}
             data-cascade
-            style="--animation-order: {{ forloop.index }};"
+            style="--animation-order: {{ locksmith_f3c8_forloop__index }};"
           {% endif %}
         >
-          {%- assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1 -%}
+          {%- assign placeholder_image_index = locksmith_f3c8_forloop__index0 | modulo: 4 | plus: 1 -%}
           {%- case block.type -%}
             {%- when 'image' -%}
               <div class="collage-card {% if section.settings.card_styles == 'none' %}global-media-settings{% else %}card-wrapper {{ section.settings.card_styles }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
@@ -48,9 +54,9 @@
                   {%- if block.settings.image != blank -%}
                     {%- liquid
                       if section.settings.desktop_layout == 'left'
-                        assign large_block = forloop.first
+                        assign large_block = locksmith_f3c8_forloop__first
                       else
-                        assign large_block = forloop.last
+                        assign large_block = locksmith_f3c8_forloop__last
                       endif
 
                       assign grid_space_desktop = settings.spacing_grid_horizontal | divided_by: 2 | append: 'px'

@@ -7,11 +7,17 @@
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
+    {%- comment %}<locksmith:2ed0>{% endcomment -%}
+      {%- assign locksmith_cfbf_forloop__size = 0 %}{%- for link in section.settings.menu.links -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: section.settings.menu, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_cfbf_forloop__size = locksmith_cfbf_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_cfbf_forloop__index = nil -%}
+    {%- comment %}</locksmith:2ed0>{% endcomment -%}
     {%- for link in section.settings.menu.links -%}
+      {%- comment %}<locksmith:2be9>{% endcomment -%}
+        {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: section.settings.menu, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_cfbf_forloop__index == nil %}{% assign locksmith_cfbf_forloop__index = 1 %}{% assign locksmith_cfbf_forloop__index0 = 0 %}{% else %}{% assign locksmith_cfbf_forloop__index = locksmith_cfbf_forloop__index | plus: 1 %}{% assign locksmith_cfbf_forloop__index0 = locksmith_cfbf_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_cfbf_forloop__index == 1 %}{% assign locksmith_cfbf_forloop__first = true %}{% else %}{% assign locksmith_cfbf_forloop__first = false %}{% endif %}{% if locksmith_cfbf_forloop__index == locksmith_cfbf_forloop__size %}{% assign locksmith_cfbf_forloop__last = true %}{% else %}{% assign locksmith_cfbf_forloop__last = false %}{% endif %}{% assign locksmith_cfbf_forloop__rindex = locksmith_cfbf_forloop__size | minus: locksmith_cfbf_forloop__index | minus: 1 %}{% assign locksmith_cfbf_forloop__rindex0 = locksmith_cfbf_forloop__size | minus: locksmith_cfbf_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+      {%- comment %}</locksmith:2be9>{% endcomment -%}
       <li>
         {%- if link.links != blank -%}
           <header-menu>
-            <details id="Details-HeaderMenu-{{ forloop.index }}">
+            <details id="Details-HeaderMenu-{{ locksmith_cfbf_forloop__index }}">
               <summary
                 id="HeaderMenu-{{ link.handle }}"
                 class="header__menu-item list-menu__item link focus-inset"
@@ -26,12 +32,15 @@
                 {% render 'icon-caret' %}
               </summary>
               <ul
-                id="HeaderMenu-MenuList-{{ forloop.index }}"
+                id="HeaderMenu-MenuList-{{ locksmith_cfbf_forloop__index }}"
                 class="header__submenu list-menu list-menu--disclosure color-{{ section.settings.menu_color_scheme }} gradient caption-large motion-reduce global-settings-popup"
                 role="list"
                 tabindex="-1"
               >
                 {%- for childlink in link.links -%}
+                  {%- comment %}<locksmith:7f20>{% endcomment -%}
+                    {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: childlink, subject_parent: link, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                  {%- comment %}</locksmith:7f20>{% endcomment -%}
                   <li>
                     {%- if childlink.links == blank -%}
                       <a
@@ -58,6 +67,9 @@
                           class="header__submenu list-menu motion-reduce"
                         >
                           {%- for grandchildlink in childlink.links -%}
+                            {%- comment %}<locksmith:c480>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: grandchildlink, subject_parent: childlink, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:c480>{% endcomment -%}
                             <li>
                               <a
                                 id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"

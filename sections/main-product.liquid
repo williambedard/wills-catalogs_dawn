@@ -36,6 +36,19 @@
   endfor
 
   for collection in product.collections
+    comment
+      <locksmith:6c96> Code added automatically by the Locksmith app. Do not modify or remove.
+    endcomment
+    capture var
+      render 'locksmith-variables', scope: 'subject', subject: collection, subject_parent: product, variable: 'transparent'
+    endcapture
+    if var == "true"
+    else
+      continue
+    endif
+    comment
+      </locksmith:6c96> End Locksmith code block.
+    endcomment
     if collection.metafields.grouped_product.option != blank
       assign product_group_collection = collection
       assign product_group_option = collection.metafields.grouped_product.option
@@ -615,6 +628,9 @@
                               <div id="Slide-{{ block.id }}-{{ forloop.index }}" class="complementary-slide complementary-slide--{{ settings.card_style }} grid__item slider__slide slideshow__slide" tabindex="-1" role="group"{% if number_of_slides > 1 %} aria-roledescription="{{ 'sections.slideshow.slide' | t }}" aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"{% endif %}>
                                 <ul class="list-unstyled" role="list">
                                   {%- for product in recommendations.products limit: block.settings.products_per_page offset: continue -%}
+                                    {%- comment %}<locksmith:1b17>{% endcomment -%}
+                                      {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: product, subject_parent: recommendations, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                    {%- comment %}</locksmith:1b17>{% endcomment -%}
                                     <li>
                                       {% render 'card-product',
                                         card_product: product,
@@ -693,6 +709,9 @@
 
   {% assign popups = section.blocks | where: 'type', 'popup' %}
   {%- for block in popups -%}
+    {%- comment %}<locksmith:282f>{% endcomment -%}
+      {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+    {%- comment %}</locksmith:282f>{% endcomment -%}
     <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
       <div
         role="dialog"
